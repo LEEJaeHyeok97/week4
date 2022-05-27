@@ -10,15 +10,12 @@ router.get('/', async(req, res) => {
     const { content } = req.body;
 
     const postDatas = await Posts.findAll({});
-    if(postDatas){
+    
         return res.json({
             data: postDatas
         });
-    }
+    
 
-    return res.json({
-        data: "[]"
-    });
 });
 
 
@@ -44,13 +41,12 @@ router.get('/:postid', async(req, res) => {
 
 //글 생성
 router.post('/', async(req, res) => {
-    const t = req.header("X-User-Id"); //user-Id
-    const { content } = req.body;
-
+    const t = parseInt(req.header("X-User-Id")); //user-Id headers < 복수 === 배열로 만들어짐 , headers 배열이 parseInt 불가능!
+    console.log(t)
     const post_list = await Posts.create({
-        content,
-        writer : index++
-        // index++말고 id로 받아오는 방법을 고민 해보았으나 오류가 났음
+        content : req.body.content,
+        writer : t
+        // index++말고 id로 받아오는 방법을 고민 해보았으나 오류가 났음 -> 수정함
     });
 
     return res.json({
@@ -64,26 +60,33 @@ router.post('/', async(req, res) => {
 });
 
 
-//특정 글 수정
+//특정 글 수정  
 router.put('/:postId', async(req, res) => {
-    const { user } = req.params;
-    const { newContent } = req.body;
+    const userId = parseInt(req.header("X-User-Id"));
+    const { userX } = req.params;
+    const { newContent } = req.body.content; 
 
-    const a = await Posts.findOne({where : {user}});
 
-    if(a){
+    const exist = await Posts.findOne({ where : { id : userX , writer : userId }});
+
+
+    if(exist){
         await Posts.update({
-            content: newContent
+            content : newContent
         }, {
-            where: { id: user}
+            where: { id: userX, writer : exist.id }
         });
 
         return res.json({
             data: {
-                id: user
+                id: exist.id
             }
         });
     }
+
+    return req.json({
+        "error" : "Cannot modify post"
+    });
 
 
 });
@@ -92,12 +95,14 @@ router.put('/:postId', async(req, res) => {
 //특정 글 삭제
 router.delete('/:postId', async(req, res) => {
     const { user } = req.params;
+    //console.log(typeof(user), "asdasdaddad")
+    const userId = parseInt(req.header("X-User-Id"));
     
-    const a = await Posts.findOne({where: user});
+    const a = await Posts.findOne({where: { id : user }});
 
     if(a) {
         await Posts.destroy({
-            where: { id: user },
+            where: { id : user },
         });
         return res.json({
             data: "Successfully deleted"
