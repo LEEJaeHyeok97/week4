@@ -5,7 +5,8 @@ import Posts from "./posts";
 import Auth from "./auth";
 
 
-
+const bcrypt = require('bcrypt');
+const { verifyToken } = require('./middlewares');
 const app = Router();
 
 app.use("/posts", Posts);

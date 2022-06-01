@@ -7,7 +7,7 @@ module.exports = class Emails extends Sequelize.Model{
                             type: Sequelize.STRING(20),
                         },
                         password: {
-                            type: Sequelize.INTEGER(10),
+                            type: Sequelize.STRING(1000),
                         },
 
 
