@@ -59,7 +59,8 @@ router.get('/:postid', async(req, res) => {
 
 //글 생성
 router.post('/', async(req, res) => {
-    const t = parseInt(req.header("X-User-Id")); //user-Id headers < 복수 === 배열로 만들어짐 , headers 배열이 parseInt 불가능!
+    //const t = parseInt(req.header("X-User-Id")); //user-Id headers < 복수 === 배열로 만들어짐 , headers 배열이 parseInt 불가능!
+    const t = req.decoded.id;
     console.log(t)
     const post_list = await Posts.create({
         content : req.body.content,
@@ -80,7 +81,8 @@ router.post('/', async(req, res) => {
 
 //특정 글 수정  
 router.put('/:postId', async(req, res) => {
-    const userId = parseInt(req.header("X-User-Id"));
+    //const userId = parseInt(req.header("X-User-Id"));
+    const userId = req.decoded.id;
     const { userX } = req.params;
     const { newContent } = req.body.content; 
 
@@ -114,7 +116,7 @@ router.put('/:postId', async(req, res) => {
 router.delete('/:postId', async(req, res) => {
     const { user } = req.params;
     //console.log(typeof(user), "asdasdaddad")
-    const userId = parseInt(req.header("X-User-Id"));
+    const userId = req.decoded.id;
     
     const a = await Posts.findOne({where: { id : user }});
 
