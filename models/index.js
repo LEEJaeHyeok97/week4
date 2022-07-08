@@ -1,5 +1,5 @@
 const Sequelize = require("sequelize");
-const Emails = require("./emails");  // 1
+  // 1
 const Posts = require("./posts");
 
 
@@ -16,15 +16,15 @@ const sequelize = new Sequelize(
 
 db.sequelize = sequelize;
 
-db.Emails = Emails;  // 2
+  // 2
 db.Posts = Posts; 
 
 
-Emails.init(sequelize);  // 3
+  // 3
 Posts.init(sequelize);
 
 
-Emails.associate(db);  // 4
+  // 4
 Posts.associate(db);
 
 

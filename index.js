@@ -1,17 +1,16 @@
 import express from "express";
 import api from "./api";
-import { config } from 'dotenv';
+
 
 const app = express();
 const port = 3000;
 
-config();
 
 
 const { sequelize } = require("./models");
 
-sequelize
-  .sync({ force: true })
+sequelize //db 강제 업데이트
+  .sync({ force: false })
   .then(() => {
     console.log("데이터베이스 연결 성공");
   })
